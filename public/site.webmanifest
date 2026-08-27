@@ -1,0 +1,33 @@
+{
+  "name": "Argamenon — IT kafić · Beograd",
+  "short_name": "Argamenon",
+  "description": "IT kafić u Beogradu — 128 utičnica, 1 Gbit/s simetričan net i najbolja kafa u gradu.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0a0f0d",
+  "theme_color": "#0a0f0d",
+  "lang": "sr",
+  "categories": ["food", "business", "productivity"],
+  "icons": [
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

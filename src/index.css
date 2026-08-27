@@ -1,0 +1,415 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #0a0f0d;
+  --color-ink-2: #0d1411;
+  --color-panel: #101915;
+  --color-line: #1e2b24;
+  --color-line-2: #2a3a31;
+  --color-fog: #e6efe9;
+  --color-mist: #93a89c;
+  --color-moss: #5f7a6c;
+  --color-term: #45e0a0;
+  --color-term-dim: #2a8f66;
+  --color-brew: #e8a33d;
+  --color-brew-deep: #b57722;
+  --color-cy: #5cc8de;
+
+  --font-display: "Space Grotesk", "IBM Plex Sans", sans-serif;
+  --font-body: "IBM Plex Sans", "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+  background-color: var(--color-ink);
+}
+
+body {
+  background-color: var(--color-ink);
+  color: var(--color-fog);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-y: none;
+}
+
+::selection {
+  background: var(--color-term);
+  color: #06251a;
+}
+
+/* ---------- scrollbar ---------- */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #0a0f0d;
+}
+::-webkit-scrollbar-thumb {
+  background: #22302a;
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-term-dim);
+}
+
+/* ---------- ambient layers ---------- */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, rgba(69, 224, 160, 0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(69, 224, 160, 0.045) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(ellipse 90% 70% at 50% 0%, black 30%, transparent 78%);
+}
+
+.glow-green {
+  background: radial-gradient(circle, rgba(69, 224, 160, 0.13) 0%, transparent 65%);
+}
+.glow-amber {
+  background: radial-gradient(circle, rgba(232, 163, 61, 0.11) 0%, transparent 65%);
+}
+
+.noise-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  pointer-events: none;
+  opacity: 0.055;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.scanlines {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.028) 0px,
+    rgba(255, 255, 255, 0.028) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+}
+
+/* ---------- reveals ---------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(26px);
+  transition:
+    opacity 0.75s cubic-bezier(0.2, 0.65, 0.25, 1),
+    transform 0.75s cubic-bezier(0.2, 0.65, 0.25, 1);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-line {
+  display: block;
+  overflow: hidden;
+}
+.reveal-line > span {
+  display: block;
+  transform: translateY(110%);
+  transition: transform 0.9s cubic-bezier(0.19, 1, 0.22, 1);
+}
+.reveal-line.is-visible > span {
+  transform: translateY(0);
+}
+
+/* ---------- keyframes ---------- */
+@keyframes blink {
+  0%, 55% { opacity: 1; }
+  56%, 100% { opacity: 0; }
+}
+.caret {
+  animation: blink 1.05s steps(1) infinite;
+}
+
+/* marquee motion + glitch bursts are driven by JS (useMarquee hook)
+   so they work even when CSS animations are blocked by the OS */
+
+@keyframes kenburns {
+  0% { transform: scale(1) translate(0, 0); }
+  100% { transform: scale(1.1) translate(1.4%, -1.4%); }
+}
+.kenburns {
+  animation: kenburns 16s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@keyframes pulseDot {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(69, 224, 160, 0.55); }
+  70% { box-shadow: 0 0 0 7px rgba(69, 224, 160, 0); }
+}
+.pulse-dot {
+  animation: pulseDot 2.2s ease-out infinite;
+}
+
+@keyframes steamRise {
+  0% { transform: translateY(0) scaleX(1); opacity: 0; }
+  20% { opacity: 0.75; }
+  100% { transform: translateY(-26px) scaleX(1.5); opacity: 0; }
+}
+.steam i {
+  display: block;
+  width: 2px;
+  height: 12px;
+  border-radius: 2px;
+  background: var(--color-mist);
+  animation: steamRise 2.6s ease-out infinite;
+}
+.steam i:nth-child(2) { animation-delay: 0.7s; }
+.steam i:nth-child(3) { animation-delay: 1.4s; }
+
+@keyframes floaty {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.floaty {
+  animation: floaty 5.5s ease-in-out infinite;
+}
+
+/* terminal window typing glow */
+@keyframes termGlow {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+.term-glow {
+  animation: termGlow 3.2s ease-in-out infinite;
+}
+
+/* ---------- menu row leader dots ---------- */
+.leader {
+  flex: 1;
+  border-bottom: 1px dotted #2f4438;
+  margin: 0 0.75rem;
+  transform: translateY(-4px);
+  transition: border-color 0.3s;
+}
+.menu-row:hover .leader {
+  border-color: var(--color-term-dim);
+}
+
+/* nav link underline slide */
+.nav-link {
+  position: relative;
+}
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  height: 1.5px;
+  width: 100%;
+  background: var(--color-term);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.35s cubic-bezier(0.2, 0.65, 0.25, 1);
+}
+.nav-link:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* ---------- preloader ---------- */
+@keyframes crtOn {
+  0% {
+    transform: scaleY(0.004) scaleX(0.7);
+    filter: brightness(8);
+    opacity: 0.4;
+  }
+  45% {
+    transform: scaleY(1.03) scaleX(1);
+    filter: brightness(2.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scaleY(1) scaleX(1);
+    filter: brightness(1);
+  }
+}
+.crt-on {
+  animation: crtOn 0.55s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+
+.preloader-panel {
+  transition: transform 0.85s cubic-bezier(0.76, 0, 0.24, 1);
+}
+.preloader-panel.preloader-exit {
+  transform: translateY(-102%);
+}
+
+.preloader-edge {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 3px;
+  background: linear-gradient(to right, transparent, #45e0a0 20%, #e8a33d 50%, #45e0a0 80%, transparent);
+  box-shadow: 0 0 24px rgba(69, 224, 160, 0.8);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.preloader-exit .preloader-edge {
+  opacity: 1;
+}
+
+.text-outline-term {
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(69, 224, 160, 0.28);
+}
+
+@keyframes flickerLine {
+  0%, 100% { opacity: 0.85; }
+  45% { opacity: 0.4; }
+  50% { opacity: 0.95; }
+  55% { opacity: 0.5; }
+}
+.flicker {
+  animation: flickerLine 4s linear infinite;
+}
+
+/* ---------- hero glitch ---------- */
+.glitch {
+  position: relative;
+}
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  white-space: nowrap;
+}
+.glitch::before {
+  color: var(--color-term);
+  animation: glitchA 7s infinite steps(1);
+  animation-delay: var(--gd, 0s);
+}
+.glitch::after {
+  color: var(--color-brew);
+  animation: glitchB 7s infinite steps(1);
+  animation-delay: var(--gd, 0s);
+}
+@keyframes glitchA {
+  0%, 89%, 97%, 100% { opacity: 0; transform: none; clip-path: inset(0 0 0 0); }
+  90% { opacity: 0.85; transform: translate(-5px, 2px); clip-path: inset(8% 0 58% 0); }
+  92% { opacity: 0.85; transform: translate(4px, -1px); clip-path: inset(62% 0 12% 0); }
+  94% { opacity: 0.85; transform: translate(-3px, 1px); clip-path: inset(32% 0 42% 0); }
+}
+@keyframes glitchB {
+  0%, 89.5%, 97.5%, 100% { opacity: 0; transform: none; clip-path: inset(0 0 0 0); }
+  91% { opacity: 0.8; transform: translate(5px, -2px); clip-path: inset(55% 0 20% 0); }
+  93% { opacity: 0.8; transform: translate(-4px, 1px); clip-path: inset(15% 0 65% 0); }
+  95% { opacity: 0.8; transform: translate(2px, -1px); clip-path: inset(45% 0 30% 0); }
+}
+.glitch:hover::before {
+  opacity: 0.55;
+  transform: translate(-3px, 1px);
+  clip-path: inset(10% 0 55% 0);
+}
+.glitch:hover::after {
+  opacity: 0.5;
+  transform: translate(3px, -1px);
+  clip-path: inset(55% 0 10% 0);
+}
+
+/* ---------- edge fade masks for scrolling strips ---------- */
+.edge-fade-x {
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 1.2%, #000 98.8%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 1.2%, #000 98.8%, transparent 100%);
+}
+.edge-fade-x-lg {
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 9%, #000 91%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 9%, #000 91%, transparent 100%);
+}
+
+/* ---------- giant marquee ---------- */
+.text-outline-brew {
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(232, 163, 61, 0.4);
+}
+
+/* ---------- keycap toy ---------- */
+.keycap {
+  -webkit-tap-highlight-color: transparent;
+}
+.keycap-top {
+  display: grid;
+  place-items: center;
+  width: 76px;
+  height: 76px;
+  background: linear-gradient(180deg, #1c2a23, #101a15);
+  border: 1px solid var(--color-line-2);
+  border-radius: 10px;
+  box-shadow:
+    0 7px 0 #050d0a,
+    0 12px 20px rgba(0, 0, 0, 0.65),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.4);
+  transition: transform 0.07s ease, box-shadow 0.07s ease;
+}
+.keycap:hover .keycap-top {
+  border-color: var(--color-term-dim);
+}
+.keycap.pressed .keycap-top,
+.keycap:active .keycap-top {
+  transform: translateY(6px);
+  box-shadow:
+    0 1px 0 #050d0a,
+    0 3px 8px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.4);
+}
+
+@keyframes mergePop {
+  0% { transform: scale(0.6); opacity: 0; }
+  60% { transform: scale(1.12); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.merge-pop {
+  animation: mergePop 0.45s cubic-bezier(0.2, 0.9, 0.3, 1.4) both;
+}
+
+@keyframes pipFill {
+  from { transform: scale(0.3); }
+  to { transform: scale(1); }
+}
+.pip-fill {
+  animation: pipFill 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.4) both;
+}
+
+/* ---------- reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal,
+  .reveal-line > span {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .kenburns,
+  .caret,
+  .pulse-dot,
+  .floaty,
+  .term-glow,
+  .flicker,
+  .crt-on,
+  .glitch::before,
+  .glitch::after,
+  .merge-pop,
+  .pip-fill,
+  .steam i {
+    animation: none !important;
+  }
+  .steam i {
+    opacity: 0.5;
+  }
+  .preloader-panel.preloader-exit {
+    transform: none;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+  }
+}
