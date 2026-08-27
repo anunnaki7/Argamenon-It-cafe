@@ -22,14 +22,14 @@ const BOOT_LINES: Array<[number, string]> = [
 
 const READY_LINE = "✓ sistem spreman — dobrodošli";
 
-/* boot timeline: moves + dramatic holds, ~4.6s total */
+/* boot timeline: moves + dramatic holds, ~6.7s total */
 const SEGMENTS = [
-  { to: 21, dur: 700 },
-  { to: 46, dur: 800, hold: 260 },
-  { to: 72, dur: 900, hold: 340 },
-  { to: 88, dur: 650 },
-  { to: 96, dur: 560, hold: 300 },
-  { to: 100, dur: 520 },
+  { to: 18, dur: 900 },
+  { to: 44, dur: 1000, hold: 350 },
+  { to: 71, dur: 1100, hold: 450 },
+  { to: 87, dur: 800, hold: 300 },
+  { to: 95, dur: 700, hold: 420 },
+  { to: 100, dur: 650 },
 ];
 const PLAN = (() => {
   let cursor = 0;
@@ -132,17 +132,8 @@ export function Preloader({ onReveal, onDone }: { onReveal: () => void; onDone: 
     };
   }, []);
 
-  /* progress engine */
+  /* progress engine — always runs the full boot (click to skip) */
   useEffect(() => {
-    if (reduced) {
-      const t1 = window.setTimeout(() => setP(100), 120);
-      const t2 = window.setTimeout(finish, 650);
-      return () => {
-        clearTimeout(t1);
-        clearTimeout(t2);
-      };
-    }
-
     let raf = 0;
     const t0 = performance.now();
 
@@ -151,7 +142,7 @@ export function Preloader({ onReveal, onDone }: { onReveal: () => void; onDone: 
 
       if (skip.current || elapsed >= TOTAL) {
         setP(100);
-        window.setTimeout(finish, skip.current ? 150 : 420);
+        window.setTimeout(finish, skip.current ? 150 : 700);
         return;
       }
 
@@ -219,16 +210,16 @@ export function Preloader({ onReveal, onDone }: { onReveal: () => void; onDone: 
               <CupAscii p={p} />
             </div>
 
-            {/* percent + name */}
-            <div className="relative text-right">
-              <p
-                className="text-outline-term pointer-events-none absolute -top-8 right-0 whitespace-nowrap font-display text-[clamp(44px,8vw,110px)] font-bold uppercase leading-none tracking-tight sm:-top-14"
+            {/* percent + name lockup */}
+            <div className="flex flex-col items-end">
+              <span
                 aria-hidden="true"
+                className="text-outline-term select-none font-display text-[clamp(30px,5vw,72px)] font-bold uppercase leading-[0.9] tracking-[0.06em]"
               >
                 Argamenon
-              </p>
+              </span>
               {/* liquid-fill counter: dim glass shell fills with glowing green */}
-              <p className="relative font-display text-[clamp(96px,21vw,240px)] font-bold leading-[0.85] tracking-tighter">
+              <p className="relative -mt-1 font-display text-[clamp(88px,19vw,210px)] font-bold leading-[0.82] tracking-tighter tabular-nums sm:-mt-2">
                 <span className="text-outline-term">{numStr}</span>
                 <span
                   aria-hidden="true"
