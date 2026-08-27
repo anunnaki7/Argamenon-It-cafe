@@ -139,7 +139,7 @@ A real shell — type commands and Argamenon answers:
 
 ```bash
 # 1. clone the repo
-git clone https://github.com/YOUR-USERNAME/argamenon.git
+git clone https://github.com/anunnaki7/argamenon.git
 cd argamenon
 
 # 2. install dependencies
@@ -154,19 +154,6 @@ npm run preview      # local preview of the build
 ```
 
 > No environment variables needed — the site is fully static.
-
----
-
-## ▲ Deploying to Vercel
-
-1. Push the repo to GitHub
-2. On [vercel.com](https://vercel.com) → **Add New → Project** → import the repo
-3. Vercel auto-detects Vite:
-   - **Build command:** `npm run build`
-   - **Output directory:** `dist`
-4. Hit **Deploy** — done. 🎉
-
-Every subsequent `git push` to `main` deploys a new version automatically.
 
 ---
 
