@@ -116,6 +116,13 @@ A real shell — type commands and Argamenon answers:
 
 ---
 
+---
+
+## 📸 Screenshot
+![Website Screenshot](public/images/argamenon.png)
+
+---
+
 ## 📁 Project Structure
 
 ```
