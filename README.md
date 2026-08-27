@@ -1,6 +1,10 @@
 <div align="center">
 
-```
+<table align="center">
+<tr>
+<td>
+
+<pre>
          )  )   (  (
         (  (     )  )
       ┌───────────────┐
@@ -9,7 +13,11 @@
       │   M E N O N   │▌
       │    >_         │
       └───────────────┘
-```
+</pre>
+
+</td>
+</tr>
+</table>
 
 # ☕ ARGAMENON — IT Café · Belgrade
 
